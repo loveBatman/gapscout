@@ -1,0 +1,8 @@
+# 仓库内统一使用 LF，避免 Windows / macOS 贡献者混入 CRLF
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.gif binary

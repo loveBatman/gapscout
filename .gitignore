@@ -1,0 +1,72 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---------- Node ----------
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ---------- 环境与密钥 ----------
+.env
+.env.*
+!.env.example
+
+# ---------- 运行时数据与日志 ----------
+# 注意：只忽略缓存目录，不能忽略整个 data/ —— 评测集在其中，需要入库
+backend/data/cache/
+backend/reports/
+cache/
+*.log
+logs/
+
+# ---------- 编辑器与系统 ----------
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---------- 模型权重与大文件 ----------
+# bge-small-en-v1.5 的 model.safetensors 有 127MB，超过 GitHub 单文件 100MB 硬上限，
+# 提交会被直接拒绝。模型按需下载即可（见 backend/.env.example 的 EMBED_MODEL）。
+backend/models/
+deploy/backend/models/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+*.h5
+*.ckpt
+*.npz
+
+# ---------- 构建产物 ----------
+backend/web_dist/
+frontend/dist/
+dist/
+
+# ---------- 运行时缓存与散落输出 ----------
+backend/data/embed_cache.npz
+backend/reports/
+backend/*.out.txt
+
+# ---------- 备份目录与旧快照副本 ----------
+# deploy/ 与 deploy_light/ 是 2026-09-15 的旧快照，改代码只认 backend/ 与 frontend/
+_backup_*/
+deploy/
+deploy_light/
+
+# ---------- 工具/会话目录 ----------
+.codebuddy/
+.workbuddy/

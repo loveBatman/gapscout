@@ -1,0 +1,23 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: gapscout-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gapscout
+      TZ: Asia/Shanghai
+    ports:
+      # 使用 5433 避开本机可能已占用的 5432
+      - "5433:5432"
+    volumes:
+      - gapscout_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gapscout"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  gapscout_pgdata:

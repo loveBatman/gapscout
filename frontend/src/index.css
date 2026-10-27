@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-surface-0 font-sans text-content-1 antialiased;
+    /* 氛围背景：灰阶 mesh，为毛玻璃提供可被模糊的内容 */
+    background-image: theme("backgroundImage.ambient-mesh");
+    background-attachment: fixed;
+    font-feature-settings: "tnum" 1, "cv02" 1, "cv03" 1, "cv04" 1, "cv11" 1;
+  }
+
+  /*
+   * 噪点层：整屏覆盖的静态细颗粒。
+   *
+   * 作用：消除大面积纯白带来的"塑料感"。
+   * 约束：pointer-events: none 保证不拦截交互；无动画（静态纹理不产生持续重绘）；
+   *      透明度必须极低，超过 4% 会显脏。
+   */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.028;
+    @apply bg-noise;
+  }
+
+  ::selection {
+    @apply bg-content-1 text-surface-0;
+  }
+
+  /* 键盘焦点环：浅色背景下焦点极易丢失，在此统一定义 */
+  :focus-visible {
+    @apply outline-none ring-2 ring-content-1/25 ring-offset-2 ring-offset-surface-0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-content-1/10;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-content-1/25;
+  }
+
+  input,
+  textarea,
+  button,
+  select {
+    font: inherit;
+  }
+}
+
+@layer components {
+  /* 内容卡片：白底不透明 + 1px 细边框 + 极轻阴影（边框定义形状，阴影定义浮起） */
+  .panel {
+    @apply rounded-xl border border-line-1 bg-surface-0 shadow-raise;
+  }
+
+  /*
+   * 指标卡片：浅灰底 + 无边框 + 无阴影。
+   *
+   * 与内容卡形成层级：内容卡靠「边框」界定边界，指标卡靠「底色」整体成块。
+   * 二者相邻时一眼可辨谁承载数据、谁承载内容。
+   * 不做悬停位移——指标卡不可点击，位移会造成可交互的误导。
+   */
+  .panel-muted {
+    @apply rounded-xl bg-surface-1;
+  }
+
+  /* 悬停：微位移 + 阴影加深，克制到几乎察觉不到但能感到"活" */
+  .panel-hover {
+    @apply transition-[transform,box-shadow,border-color] duration-200 ease-out;
+  }
+  .panel-hover:hover {
+    @apply border-content-4/70 shadow-float;
+    transform: translateY(-2px);
+  }
+
+  /*
+   * 玻璃材质 —— 只用于界面框架层（顶栏、侧栏面板、浮层、登录卡）。
+   * 禁止用于内容区与滚动容器内部：大面积模糊会让文字发灰、伤阅读。
+   *
+   * 四个属性缺一不可，浅色场景下少任何一个都会失败：
+   *   1. 半透明白底      —— 玻璃主体
+   *   2. backdrop-filter —— 模糊背后的内容（没有它只是半透明）
+   *   3. 极浅灰描边      —— 定义边缘；白色边框在浅色玻璃上会被"吃掉"
+   *   4. 顶部内高光 + 底部投影 —— 玻璃厚度与浮起；只有 blur 会像蒙了层雾
+   */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.62);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: theme("boxShadow.glass");
+  }
+
+  /* 顶栏玻璃：贴顶细长，只需底部边框与内高光，不需要大投影 */
+  .glass-topbar {
+    background-color: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  /* 骨架屏：加载态占位，替代空白等待 */
+  .skeleton {
+    @apply animate-shimmer rounded-md;
+    background-color: #f1f1f1;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.85) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-line-1 bg-surface-1 px-2 py-0.5 text-micro font-medium text-content-3;
+  }
+
+  .divide-line {
+    @apply h-px w-full bg-line-1;
+  }
+
+  .num {
+    @apply font-mono tabular-nums;
+  }
+}
+
+/*
+ * 回退：不支持 backdrop-filter 的环境退化为不透明白底。
+ * 否则会出现"半透明但没有模糊"的浑浊效果，比不做更糟。
+ */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-topbar {
+    background-color: #ffffff;
+  }
+}

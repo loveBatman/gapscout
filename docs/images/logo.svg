@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="GapScout">
+  <title>GapScout — 空白侦察</title>
+  <desc>A broken ring with one amber marker sitting in the opening: a gap located among real data points.</desc>
+  <rect width="512" height="512" rx="112" fill="#0F766E"/>
+  <circle cx="256" cy="256" r="136" fill="none" stroke="#FFFFFF" stroke-width="44"
+          stroke-linecap="round" stroke-dasharray="640 214"/>
+  <circle cx="256" cy="256" r="36" fill="#FFFFFF" fill-opacity="0.92"/>
+  <circle cx="352" cy="160" r="40" fill="#FBBF24"/>
+</svg>

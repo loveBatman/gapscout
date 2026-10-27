@@ -1,0 +1,87 @@
+{
+  "description": "检索链路的客观评测集。must_hit 为人工确认的核心论文（标题关键片段），用于计算召回率；noise_markers 为不应出现的跨领域词，用于检测术语歧义引入的污染。",
+  "version": "1.0",
+  "cases": [
+    {
+      "direction": "retrieval augmented generation",
+      "must_hit": [
+        "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+        "Self-RAG",
+        "Retrieval-Augmented Generation for Large Language Models"
+      ],
+      "noise_markers": ["augmented reality", "virtual reality"],
+      "note": "augmented 一词存在歧义，是术语覆盖闸门的重点验证对象"
+    },
+    {
+      "direction": "multimodal large language model inference",
+      "must_hit": [
+        "Visual Instruction Tuning",
+        "Qwen-VL",
+        "LLaVA"
+      ],
+      "noise_markers": ["toxicology", "hydrology", "pathology"],
+      "note": "验证能否剔除医学、水利等跨学科论文"
+    },
+    {
+      "direction": "chain of thought reasoning large language model",
+      "must_hit": [
+        "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+        "Large Language Models are Zero-Shot Reasoners"
+      ],
+      "noise_markers": [],
+      "note": "经典工作明确，召回率可稳定衡量"
+    },
+    {
+      "direction": "diffusion model image generation",
+      "must_hit": [
+        "Denoising Diffusion Probabilistic Models",
+        "High-Resolution Image Synthesis with Latent Diffusion Models"
+      ],
+      "noise_markers": ["drug discovery", "molecular dynamics"],
+      "note": "diffusion 一词在物理、化学领域也常用，验证歧义处理"
+    },
+    {
+      "direction": "code generation large language model",
+      "must_hit": [
+        "Evaluating Large Language Models Trained on Code",
+        "CodeT5",
+        "StarCoder"
+      ],
+      "noise_markers": [],
+      "note": "验证面向软件开发场景的召回"
+    },
+    {
+      "direction": "graph neural network molecular property prediction",
+      "must_hit": [
+        "Neural Message Passing for Quantum Chemistry",
+        "Analyzing Learned Molecular Representation Methods"
+      ],
+      "noise_markers": [],
+      "note": "交叉学科方向，验证学科过滤与召回平衡"
+    },
+    {
+      "direction": "vision language model visual question answering",
+      "must_hit": ["Visual Question Answering"],
+      "noise_markers": [],
+      "note": "任务定义明确，用于验证矩阵抽取的任务维度"
+    },
+    {
+      "direction": "federated learning privacy",
+      "must_hit": ["Communication-Efficient Learning of Deep Networks from Decentralized Data"],
+      "noise_markers": [],
+      "note": "验证隐私保护方向的召回"
+    },
+    {
+      "direction": "knowledge distillation model compression",
+      "must_hit": ["Distilling the Knowledge in a Neural Network"],
+      "noise_markers": [],
+      "note": "经典工作引用极高，应稳定命中"
+    },
+    {
+      "direction": "large language model hallucination detection",
+      "must_hit": ["Survey of Hallucination in Natural Language Generation"],
+      "noise_markers": [],
+      "note": "较新方向，用于观察召回量级"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+[project]
+name = "gapscout-backend"
+version = "0.1.0"
+description = "空白侦察 GapScout - 科研空白识别与可溯源综述生成，后端服务"
+requires-python = ">=3.11"
+
+dependencies = [
+    # Web 框架
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.12",
+    # 配置与校验
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "python-dotenv>=1.0.1",
+    # 数据库
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "pgvector>=0.3.6",
+    "alembic>=1.14.0",
+    # 网络
+    "httpx>=0.27.2",
+    "tenacity>=9.0.0",
+    # 数据与算法
+    "numpy>=1.26.0",
+    "scikit-learn>=1.5.0",
+    "networkx>=3.3",
+    "datasketch>=1.6.5",
+    # 文本与全文解析
+    # 注意：不使用 pymupdf —— 其 _mupdf.pyd 在部分 Windows 环境会被应用控制策略拦截，
+    # 而 L1 全文走 arXiv HTML，PDF 仅为降级路径，纯 Python 的 pypdf 足够
+    "beautifulsoup4>=4.12.3",
+    "lxml>=5.3.0",
+    "pypdf>=5.1.0",
+    # LLM 客户端（DeepSeek 兼容 OpenAI 协议）
+    "openai>=1.54.0",
+]
+
+[project.optional-dependencies]
+# UMAP 依赖 numba，Python 3.13 下可能编译失败；缺失时自动降级为 PCA
+cluster = ["umap-learn>=0.5.7"]
+# 本地语义嵌入；未安装时自动降级为 TF-IDF（结果会有差异，见 README 的 Graceful degradation）
+embed = ["sentence-transformers>=3.0"]
+dev = ["pytest>=8.3.0", "pytest-asyncio>=0.24.0", "ruff>=0.7.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
